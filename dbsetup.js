@@ -27,9 +27,8 @@ db.serialize(()=> {
         userId INTEGER,
         commentContent TEXT,
         commentDate INTEGER,
-        FOREIGN KEY (postId) REFERENCES post(postId) ON DELETE CASCADE
+        FOREIGN KEY (postId) REFERENCES post(postId) ON DELETE CASCADE,
         FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE
         )`)
 }) 
 
-console.log(db.run(`SELECT * FROM community`))
