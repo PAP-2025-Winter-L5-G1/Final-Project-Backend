@@ -37,14 +37,15 @@ db.serialize(()=> {
         FOREIGN KEY (postId) REFERENCES post(postId) ON DELETE CASCADE,
         FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE
         )`)
-    db.run(`CREATE TABLE IF NOT EXISTS likes (
-        likeId INTEGER PRIMARY KEY AUTOINCREMENT,
-        userId INTEGER,
-        postId INTEGER,
-        commentId INTEGER,
-        FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE,
-        FOREIGN KEY (postId) REFERENCES post(postId) ON DELETE CASCADE,
-        FOREIGN KEY (commentId) REFERENCES comment(commentId) ON DELETE CASCADE
-        )`)
+        db.run(`CREATE TABLE IF NOT EXISTS likes (
+            likeId INTEGER PRIMARY KEY AUTOINCREMENT,
+            userId INTEGER,
+            postId INTEGER,
+            commentId INTEGER,
+            FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE,
+            FOREIGN KEY (postId) REFERENCES post(postId) ON DELETE CASCADE,
+            FOREIGN KEY (commentId) REFERENCES comment(commentId) ON DELETE CASCADE
+        )`);
+        
 }) 
 
