@@ -1,19 +1,28 @@
 const db = require('../dbsetup'); 
 
 
-const createUser = (userName, email, passwordHash, callback) => {
-    const sql = "INSERT INTO users (userName, email, password) VALUES (?, ?, ?";
-    db.run(sql, [userName, email, passwordHash], function (err) {
-      if (err) return callback(err);
-      callback(null, {userId: this.lastID, userName, email});
+const User = {
+  // Function to create a new user
+  createUser: (username, hashedPassword, email, callback) => {
+    const sql = `INSERT INTO users (userName, password, email) VALUES (?, ?, ?)`;
+    db.run(sql, [username, hashedPassword, email], function (err) {
+      if (err) {
+        return callback(err, null);
+      }
+      callback(null, this.lastID); // Returns the inserted user's ID
     });
+  },
+
+  // Function to find a user by username
+  findUserByUsername: (username, callback) => {
+    const sql = `SELECT * FROM users WHERE userName = ?`;
+    db.get(sql, [username], (err, row) => {
+      if (err || !row) {
+        return callback(err || new Error('User not found'), null);
+      }
+      callback(null, row);
+    });
+  },
 };
 
-const findUserByEmail = (email, callback) => {
-  db.get("SELECT * FROM users WHERE email = ?", [email], (err, user) => {
-    callback(err, user);
-  });
-};
-
-
-module.exports = { createUser, findUserByEmail };
+module.exports = User;
