@@ -1,29 +1,29 @@
-const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('./reddit.db');
+const sqlite3 = require("sqlite3").verbose();
+const db = new sqlite3.Database("./reddit.db");
 
-
-db.serialize(()=> {
-    db.run(`CREATE TABLE IF NOT EXISTS users (
+db.serialize(() => {
+  db.run(`CREATE TABLE IF NOT EXISTS users (
         userId INTEGER PRIMARY KEY AUTOINCREMENT, 
         userName TEXT,
         password TEXT,
         email TEXT
-        )`); 
-    db.run(`CREATE TABLE IF NOT EXISTS community (
+        )`);
+  db.run(`CREATE TABLE IF NOT EXISTS community (
         communityId INTEGER PRIMARY KEY AUTOINCREMENT,
         communityName TEXT,
         communityDesc TEXT
         )`);
-    db.run(`CREATE TABLE IF NOT EXISTS post (
+  db.run(`CREATE TABLE IF NOT EXISTS post (
         postId INTEGER PRIMARY KEY AUTOINCREMENT,
         communityId INTEGER,
         userId INTEGER,
         postContent TEXT,
+        postHeader TEXT,
         postDate INTEGER,
         FOREIGN KEY (communityId) REFERENCES community(communityId) ON DELETE CASCADE,
         FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE
-        )`)
-    db.run(`CREATE TABLE IF NOT EXISTS comment (
+        )`);
+  db.run(`CREATE TABLE IF NOT EXISTS comment (
         commentId INTEGER PRIMARY KEY AUTOINCREMENT,
         postId INTEGER,
         userId INTEGER,
@@ -31,7 +31,10 @@ db.serialize(()=> {
         commentDate INTEGER,
         FOREIGN KEY (postId) REFERENCES post(postId) ON DELETE CASCADE,
         FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE
-        )`)
-})
+        )`);
+  db.run(
+    `INSERT INTO community (communityName, communityDesc) VALUES ("Default", "Default community all new members join")`
+  );
+});
 
 module.exports = db;
