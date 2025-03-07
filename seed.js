@@ -5,6 +5,7 @@ const db = new sqlite3.Database('./reddit.db')
  * 
  */
 //how to add a community
-db.run(`INSERT INTO community (communityName, communityDesc) VALUES (
-         "Community1", "this is the description and its new"
-        )`)
+db.run(`INSERT INTO community (communityName, communityDesc) VALUES 
+        ("Technology", "A place to discuss tech"),
+        ("Gaming", "For gamers and gaming discussions"),
+        ("Science", "Talk about science and discoveries")`);

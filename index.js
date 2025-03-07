@@ -1,47 +1,34 @@
 const express = require('express');
 const cors = require('cors');
 const { toggleLike, countLikes } = require('./likes');
+const { createPost, getPosts, getPostById, updatePost, deletePost } = require('./posts');
+const { getAllCommunities } = require('./communities'); 
+// Import communities.js
 
 const app = express();
 const Port = process.env.PORT || 3000;
 
 app.use(cors());
-app.use(express.json()); // Important for POST requests
+app.use(express.json()); // Important for handling JSON requests
 
-// ✅ Home route to check if the server is running
+// Debugging Log (Check If Functions Are Imported Correctly)
+console.log("Imported community functions:", { getAllCommunities });
+
+// Home route
 app.get('/', (req, res) => {
     res.send("Welcome to my server");
 });
 
-// ✅ POST: Toggle Like (Add/Remove Like)
-app.post('/like', (req, res) => {
-    const { userId, postId, commentId } = req.body;
-
-    if (!userId || (!postId && !commentId)) {
-        return res.status(400).json({ error: "Invalid request data" });
-    }
-
-    toggleLike(userId, postId, commentId, (err, result) => {
+// GET: Retrieve all communities
+app.get('/communities', (req, res) => {
+    getAllCommunities((err, communities) => {
         if (err) return res.status(500).json({ error: err.message });
-        res.json(result);
+        res.json(communities);
     });
 });
 
-// ✅ GET: Get Like Count
-app.get('/likes/count', (req, res) => {
-    const { postId, commentId } = req.query;
 
-    if (!postId && !commentId) {
-        return res.status(400).json({ error: "Invalid request data" });
-    }
-
-    countLikes(postId, commentId, (err, count) => {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json({ likeCount: count });
-    });
-});
-
-// ✅ Start the server
+// Start the server
 app.listen(Port, () => {
     console.log(`✅ Server is running on port: ${Port}`);
 });
