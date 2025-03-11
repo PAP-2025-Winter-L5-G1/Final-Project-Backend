@@ -13,11 +13,18 @@ db.serialize(() => {
         communityName TEXT,
         communityDesc TEXT
         )`);
+  db.run(`CREATE TABLE IF NOT EXISTS likes (
+        likeId INTEGER PRIMARY KEY AUTOINCREMENT,
+        postId INTEGER,
+        commentId INTEGER,
+        userId INTEGER
+        )`);
   db.run(`CREATE TABLE IF NOT EXISTS post (
         postId INTEGER PRIMARY KEY AUTOINCREMENT,
         communityId INTEGER,
         userId INTEGER,
         postContent TEXT,
+        postCreator TEXT,
         postHeader TEXT,
         postDate INTEGER,
         FOREIGN KEY (communityId) REFERENCES community(communityId) ON DELETE CASCADE,
@@ -28,13 +35,33 @@ db.serialize(() => {
         postId INTEGER,
         userId INTEGER,
         commentContent TEXT,
+        commentCreator TEXT,
         commentDate INTEGER,
         FOREIGN KEY (postId) REFERENCES post(postId) ON DELETE CASCADE,
         FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE
         )`);
   db.run(
-    `INSERT INTO community (communityName, communityDesc) VALUES ("Default", "Default community all new members join")`
+    `INSERT INTO community (communityName, communityDesc)
+    SELECT "Gaming", ""
+    WHERE NOT EXISTS (SELECT 1 FROM community WHERE communityName = "Gaming")`
   );
+  db.run(
+    `INSERT INTO community (communityName, communityDesc)
+    SELECT "Sports", ""
+    WHERE NOT EXISTS (SELECT 1 FROM community WHERE communityName = "Sports")`
+  );
+  db.run(
+    `INSERT INTO community (communityName, communityDesc)
+    SELECT "Arts/Crafts", ""
+    WHERE NOT EXISTS (SELECT 1 FROM community WHERE communityName = "Arts/Crafts")`
+  );
+  //   db.all("SELECT * FROM post", (err, rows) => {
+  //     if (err) {
+  //       console.error("Error selecting data:", err);
+  //     } else {
+  //       console.table(rows);
+  //     }
+  //   });
 });
 
 module.exports = db;

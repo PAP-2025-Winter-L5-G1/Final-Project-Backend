@@ -3,8 +3,8 @@ const bodyParser = require("body-parser");
 const authRoutes = require("./Routes/auth");
 const postRoutes = require("./Routes/postsRoute");
 const commentRoutes = require("./Routes/commentsRoute");
+const likeRoutes = require("./Routes/likesRoute");
 
-const { toggleLike, countLikes } = require("./likes");
 const {
   createPost,
   getPosts,
@@ -23,6 +23,7 @@ app.use(bodyParser.json());
 app.use("/auth", authRoutes);
 app.use("/posts", postRoutes);
 app.use("/comments", commentRoutes);
+app.use("/likes", likeRoutes);
 
 app.get("/", (req, res) => {
   res.send("Welcome to the JWT Auth");
